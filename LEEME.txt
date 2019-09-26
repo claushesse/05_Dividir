@@ -1,0 +1,34 @@
+*********************************************************************************
+************************  AHK FFMPEG SCRIPT DIVIDIR *****************************
+*********************************************************************************
+
+INSTRUCCIONES :
+
+- Instalar ffmpeg.zip en cada computadora que se quiera utilizar
+	http://adaptivesamples.com/how-to-install-ffmpeg-on-windows/
+	1- Descomprimir .zip en una carpeta de fácil acceso, como C:\ffmpeg 
+	2- Click derecho sobre la carpeta "Computer"(o "Mi PC" o "Este Equipo"), elegir la opción Propiedades
+	3- Ir a "Configuración avanzada del equipo" o "Advanced system settings"
+	4- Clickear "Variables de entorno" o "Environment Variables"
+	5- System variables / Path , click en Editar
+	6- Agregar al final de la lista :   ;c:\ffmpeg\bin 
+	7- Listo!
+
+- De querer cambiar la música, reemplazar el archivo "music.mp3" por otro archivo .mp3 y renombrar para que se siga llamando "music.mp3"
+- En cada evento, correr el script de Auto Hot Key (en este caso, scriptchroma.ahk)
+- Guardar los videos a editar en la carpeta "video" 
+- Los videos editados se guardarán automáticamente en la carpeta "final" 
+
+**!IMPORTANTE!** EL SCRIPT FUNCIONA CON VIDEOS 1280x720!!!
+NO modificar el nombre de ninguna carpeta, ni mover alguno de los archivos por separado ! La estructura de la carpeta siempre debe ser :
+
+-/CarpetaDelEvento :
+----/video
+----/temp
+----/final
+----music.mp3
+----scriptdividir.ahk
+----scriptdividir.txt
+----logo.mp4
+
+

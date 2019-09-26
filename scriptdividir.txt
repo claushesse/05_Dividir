@@ -1,0 +1,72 @@
+nullsrc=size=720x720 [base]; 
+nullsrc=size=720x720 [base1];
+nullsrc=size=1280x1440 [base2];
+nullsrc=size=1280x1440 [base3];
+nullsrc=size=720x720 [base4];
+nullsrc=size=720x720 [base5];
+nullsrc=size=720x720 [base6];
+nullsrc=size=720x1080 [base7];
+nullsrc=size=720x1080 [base8];
+
+[0:v]crop=ih:ih[0];
+
+[1:v]crop=720:720, split[11][22];
+[11] setpts=PTS-STARTPTS, crop=1/2*in_w:in_h[left]; 
+[22] setpts=PTS-STARTPTS, crop=1/2*in_w:in_h[right]; 
+[base][left] overlay=shortest=1 [tmp11]; 
+[tmp11][right] overlay=shortest=1:x=W/2[dos];
+
+[2:v]crop=720:720, split[111][222];
+[111] setpts=PTS-STARTPTS, scale=1.1*iw:-1, crop=1/2*in_w:in_h[left1]; 
+[222] setpts=PTS-STARTPTS, scale=1.1*iw:-1, crop=1/2*in_w:in_h[right1]; 
+[base6][left1] overlay=shortest=1 [tmp111]; 
+[tmp111][right1] overlay=shortest=1:x=W/2[tres];
+
+[3:v]crop=720:720, split=4[1][2][3][4];
+[1] setpts=PTS-STARTPTS, scale=iw/2:ih/2 [upperleft]; 
+[2] setpts=PTS-STARTPTS, scale=iw/2:ih/2 [upperright]; 
+[3] setpts=PTS-STARTPTS, scale=iw/2:ih/2 [lowerleft]; 
+[4] setpts=PTS-STARTPTS, scale=iw/2:ih/2 [lowerright]; 
+[base1][upperleft] overlay=shortest=1 [tmp1]; 
+[tmp1][upperright] overlay=shortest=1:x=W/2 [tmp2]; 
+[tmp2][lowerleft] overlay=shortest=1:y=H/2 [tmp3]; 
+[tmp3][lowerright] overlay=shortest=1:x=W/2:y=H/2[cuatro];
+
+[4:v]split[rotate1][rotate2];
+[rotate2] vflip, hflip [rot2];
+[base2][rotate1] overlay=shortest=1:y=H/2 [rota1];
+[rota1][rot2] overlay=shortest=1 [rota2];
+[rota2] rotate=45*PI/180, crop=720:720 [rota3];
+
+[5:v]split[rotate1][rotate2];
+[rotate2] vflip, hflip [rot2];
+[base3][rotate1] overlay=shortest=1:y=H/2 [rota1];
+[rota1][rot2] overlay=shortest=1 [rota2];
+[rota2] rotate=-45*PI/180, crop=720:720 [rota4];
+
+[6:v]crop=720:720, split=4[6][7][8][9];
+[6]rotate=-90*PI/180[pr];
+[base4][pr]overlay=shortest=1:x=w/4[ovl1];
+
+[8]vflip, hflip[rot1];
+[base7][rot1]overlay=shortest=1[rot11];
+[rot11]crop=720:720[rot111];
+
+[base8][7]overlay=shortest=1:y=360[down1];
+[down1]crop=720:720[down2];
+
+[9]rotate=90*PI/180[pr2];
+[base5][pr2]overlay=shortest=1:x=-1*w/4[ovl2]; 
+[ovl1][down2] blend=all_expr=if(gt(X\,Y*(W/H))\,A\,B) [merge];
+[rot111][ovl2] blend=all_expr=if(gt(X\,Y*(W/H))\,A\,B) [merge1];
+[merge][merge1]blend=all_expr=if(gt(X\,W-Y*(W/H))\,A\,B)[final];
+[final]crop=720:720[diag];
+
+[7:v]crop=720:720[ult];
+
+[8:v]crop=720:720[logo];
+
+[0][dos][tres][cuatro][rota3][rota4][diag][ult][logo]concat=n=9:v=1:a=0[ccat];
+[9:v]setpts=PTS-STARTPTS/TB, crop=720:720[top];
+[ccat][top]overlay=enable='between(t\,0,10)'[vid];
+[10:a]volume=volume=0.4[aud]
